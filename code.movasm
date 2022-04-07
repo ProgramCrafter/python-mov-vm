@@ -1,0 +1,89 @@
+
+L0      mov     60      [w]
+
+L1      mov     $L5     addr
+-- function L1 (char -> [char], n -> sub0, ret -> [L1RET])
+L2.0    mov     1       sub1
+L2.1    mov     sub0    atz0
+        mov     [L1RET] atz1
+        mov     $L3     atz2
+        mov     atz     addr
+L3      mov     [char]  cio
+L4      mov     sub     sub0
+L4D     mov     $L2.1   addr
+L4DD    
+
+L5      
+
+-- main loop
+L6      mov     cio     sub0
+        mov     32      sub1 -- exit on Space
+        mov     sub     atz0
+        mov     $L19    atz1
+        mov     $L7     atz2
+        mov     atz     addr
+L7      mov     9556    cio
+L8      mov     [w]     sub0
+        mov     2       sub1
+        mov     sub     sub0
+        mov     9552    [char]
+        mov     $L9     [L1RET]
+        mov     $L2.0   addr
+L9      mov     9559    cio
+L10     mov     10      cio
+L11     mov     9553    cio
+L11.5   mov     32      cio
+        mov     32      cio
+        mov     84      cio
+        mov     105     cio
+        mov     103     cio
+        mov     101     cio
+        mov     114     cio
+        mov     79      cio
+        mov     83      cio
+        mov     32      cio
+        mov     118     cio
+        mov     48      cio
+        mov     46      cio
+        mov     48      cio
+        mov     46      cio
+        mov     49      cio
+        mov     32      cio
+        mov     124     cio
+        mov     32      cio
+        mov     110     cio
+        mov     111     cio
+        mov     116     cio
+        mov     32      cio
+        mov     108     cio
+        mov     105     cio
+        mov     99      cio
+        mov     101     cio
+        mov     110     cio
+        mov     115     cio
+        mov     101     cio
+        mov     100     cio
+        mov     33      cio
+        mov     33      cio
+        mov     33      cio
+L12     mov     [w]     sub0
+        mov     36      sub1
+        mov     sub     sub0
+        mov     32      [char]
+        mov     $L13    [L1RET]
+        mov     $L2.0   addr
+L13     mov     9553    cio
+L14     mov     10      cio
+L15     mov     9562    cio
+L16     mov     [w]     sub0
+        mov     2       sub1
+        mov     sub     sub0
+        mov     9552    [char]
+        mov     $L17    [L1RET]
+        mov     $L2.0   addr
+L17     mov     9565    cio
+L18     mov     256     cio
+L18D    mov     $L6     addr
+
+-- exit
+L19     mov     257     cio
