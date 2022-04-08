@@ -41,6 +41,8 @@ L5      mov     [s]     sub1
 
 L6      mov     [s]     maddr
         mov     memory  cio
+        mov     0       memory -- when exitting, we will run through this memory
+        
         mov     [s]     add0
         mov     add     [s]
         mov     $L5     addr
@@ -54,4 +56,4 @@ L8      mov     cio     sub0
         mov     sub     atz0
         mov     atz     addr
 
-L9      mov     16383   addr
+L9
