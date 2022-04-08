@@ -4,6 +4,8 @@ import curses
 import time
 import os
 
+memory = [b'']
+
 def add(trig, reg0, reg1):
   'wadd0+wadd1>add0+add1>add'
   return reg0 + reg1,
@@ -42,7 +44,7 @@ def curses_io(trig, reg0):
     elif reg0 == 257:
       curses.reset_shell_mode()
     else:
-      screen.addch(reg0 % 256)
+      screen.addch(reg0)
     return 0,
   else:
     return screen.getch(),

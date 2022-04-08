@@ -1,4 +1,4 @@
-from registers import regs, IO_DEVICES
+from registers import regs, IO_DEVICES, memory
 from utils import isint, byte
 
 import time
@@ -48,18 +48,20 @@ for reg in ('maddr addr reg0 reg1 reg2 reg3 reg4 reg5 reg6 reg7').split():
 print(registers_id)
 
 def processor(raw_input, commands, limit=10000, debug=True):
-  raw_commands = b''
+  memory[0] = b''
   for c in commands:
     magic, src, dst = c.strip().lower().split(' ')
     
     if debug:
-      print(len(raw_commands) // 4, magic, src, dst, sep='\t')
+      print(len(memory[0]) // 4, magic, src, dst, sep='\t')
     
-    raw_commands += bytes_word(parse_int(src) or registers_id[src]) + bytes_word(registers_id[dst])
+    memory[0] += bytes_word(parse_int(src) or registers_id[src]) + bytes_word(registers_id[dst])
   
   if debug:
-    print(raw_commands, repr(raw_input))
+    print(memory[0], repr(raw_input))
     print()
+  
+  memory[0] = memory[0] + b'\0' * (1048576 * 4 - len(memory))
   
   IO_DEVICES[0].buffer = raw_input
   IO_DEVICES[0].ptr = 0
@@ -68,10 +70,10 @@ def processor(raw_input, commands, limit=10000, debug=True):
   
   addr = 0
   for i in range(limit):
-    if addr * 4 + 3 >= len(raw_commands): break
+    if addr * 4 + 3 >= len(memory[0]): break
     
-    src = raw_commands[addr * 4 + 0] * 256 + raw_commands[addr * 4 + 1]
-    dst = raw_commands[addr * 4 + 2] * 256 + raw_commands[addr * 4 + 3]
+    src = memory[0][addr * 4 + 0] * 256 + memory[0][addr * 4 + 1]
+    dst = memory[0][addr * 4 + 2] * 256 + memory[0][addr * 4 + 3]
     
     if not (src & 0x8000):
       # executing read callbacks
