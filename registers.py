@@ -69,11 +69,17 @@ def atz(trig, atz0, atz1, atz2):
   if atz0 == 0: return atz1,
   return atz2,
 
-def mem(trig, value):
-  'wmemory>memory>'
-  
-  print(value, end=' ')
-  
-  return []
+def _legacy(trig, _, __): # empty register between memory and maddr
+  '>memory+>'
+  return tuple()
 
-regs = [add, sub, mul, div, tlt, curses_io, io, atz, mem]
+def mem(trig, value, maddr):
+  'wmemory+rmemory>memory+maddr>memory'
+  
+  if trig == 'wmemory':
+    memory[0] = memory[0][:maddr*8] + value.to_bytes(8, 'big') + memory[0][maddr*8+8:]
+    return value,
+  else:
+    return int.from_bytes(memory[0][maddr*8:maddr*8+8], 'big'),
+
+regs = [add, sub, mul, div, tlt, curses_io, io, atz, _legacy, mem]
