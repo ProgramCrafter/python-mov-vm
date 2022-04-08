@@ -42,8 +42,11 @@ for callback in regs:
   for t in triggers:
     registers_cb[create_r(t[1:])][t[:1] == 'w'].append(create_proxy(t))
 
-for reg in ('maddr addr reg0 reg1 reg2 reg3 reg4 reg5 reg6 reg7').split():
+for reg in ('maddr addr').split():
   create_r(reg)
+
+for i in range(32):
+  create_r('reg%d' % i)
 
 print(registers_id)
 
@@ -61,7 +64,7 @@ def processor(raw_input, commands, limit=10000, debug=True):
     print(memory[0], repr(raw_input))
     print()
   
-  memory[0] = memory[0] + b'\0' * (1048576 * 4 - len(memory))
+  memory[0] = memory[0] + b'\0' * (1048576 * 8 - len(memory[0]))
   
   IO_DEVICES[0].buffer = raw_input
   IO_DEVICES[0].ptr = 0

@@ -1,59 +1,241 @@
 
-L0      mov     1024    [s]
-        mov     1024    [s_end]
-        mov     32      sub1 -- terminal char
-        mov     1       add1
+L6      mov     1028        [_sa]
+        mov     1024        [_acf]
+L7      mov     1024        maddr
+        mov     1024        mul0
+        mov     1024        mul1
+        mov     mul         memory
         
-        mov     80      cio
-        mov     119     cio
-        mov     100     cio
-        mov     58      cio
-        mov     32      cio
+        mov     $L40        addr
 
-L1      mov     cio     [c]
-        mov     [c]     add0
-        mov     add     atz0
-        mov     $L1     atz1
-        mov     $L2     atz2
-        mov     atz     addr
+-- fn L9 (L -> [L9_l], R -> [L9_r], u -> [L9_u0],[L9_u1], ret -> [L9RET])
+--   -> [L9_v]
+L10     mov     [_sa]       add0
+        mov     4           add1
+        mov     [_sa]       [L9_v]
+        mov     add         [_sa]
+L11     mov     [L9_v]      maddr
+        mov     [L9_u0]     memory
+        mov     1           add1
+L12     mov     maddr       add0
+        mov     add         maddr
+        mov     [L9_u1]     memory
+L13     mov     maddr       add0
+        mov     add         maddr
+        mov     [L9_r]      memory
+L14     mov     maddr       add0
+        mov     add         maddr
+        mov     [L9_l]      memory
+L15     mov     [L9_l]      atz0
+        mov     $L16        atz1
+        mov     $L15.1      atz2
+        mov     atz         addr
+L15.1   mov     [L9_l]      add0
+        mov     add         add0
+        mov     add         maddr
+        mov     [L9_v]      memory
+L16     mov     [L9_r]      atz0
+        mov     $L17        atz1
+        mov     $L16.1      atz2
+        mov     atz         addr
+L16.1   mov     [L9_r]      add0
+        mov     add         add0
+        mov     add         add0
+        mov     add         maddr
+        mov     [L9_v]      memory
+L17     mov     [L9RET]     addr
+
+-- fn L18 (v -> [L18_v0],[L18_v1],[L18_v2],[L18_v3], ret -> [L18RET]) -> _
+L19     mov     [L18_v2]    atz0
+        mov     $L20        atz1
+        mov     $L19.1      atz2
+        mov     atz         addr
+L19.1   mov     [L18_v2]    add0
+        mov     3           add1
+        mov     add         maddr
+        mov     [L18_v3]    memory
+L20     mov     [L18_v3]    atz0
+        mov     $L21        atz1
+        mov     $L20.1      atz2
+        mov     atz         addr
+L20.1   mov     [L18_v3]    add0
+        mov     2           add1
+        mov     add         maddr
+        mov     [L18_v2]    memory
+        mov     $L21.1      addr
+L21     mov     [L18_v2]    [_acf]
+L21.1   mov     [L18RET]    addr
+
+-- extern "TIG"
+-- fn L22 (size -> [size], ret -> [L22RET]) -> [L22_v]
+L23     mov     [_acf]      [cur]
+        mov     [cur]       maddr
+        mov     memory      tlt0
+        mov     [size]      tlt1
+        mov     tlt         atz0
+        mov     $L23.1      atz1
+        mov     $L28        atz2
+        mov     atz         addr
+L23.1   mov     memory      sub0
+        mov     [size]      sub1
+        mov     0           [L9_l]
+        mov     [cur]       [L9_r]
+        mov     sub         [L9_u0]
+        mov     [size]      [L9_u1]
+        mov     $L23.2      [L9RET]
+        mov     $L10        addr
+L23.2   mov     [L9_v]      [_acf]
+        mov     [L9_v]      [L22_v]
+        mov     [L22RET]    addr
+L28     mov     [cur]       add0
+        mov     1           add1
+        mov     [cur]       maddr
+        mov     memory      [curf]
+        mov     add         maddr
+        mov     memory      [curs]
+        mov     add         add0
+        mov     add         maddr
+        mov     memory      [nxt]
         
-L2      mov     [c]     sub0
-        mov     sub     atz0
-        mov     $L4     atz1
-        mov     $L3     atz2
-        mov     atz     addr
+        mov     [nxt]       atz0
+        mov     $L33        atz1
+        mov     $L30        atz2
+        mov     atz         addr
+L30     mov     [nxt]       maddr
+        mov     memory      sub0
+        mov     [size]      sub1
+        mov     [curf]      add0
+        mov     [curs]      add1
+        mov     sub         tlt0
+        mov     add         tlt1
+        mov     tlt         atz0
+        mov     $L31        atz1
+        mov     $L32        atz2
+        mov     atz         addr
+L31     mov     [cur]       [L9_l]
+        mov     [nxt]       [L9_r]
+        mov     sub         [L9_u0]
+        mov     [size]      [L9_u1]
+        mov     $L31.1      [L9RET]
+        mov     $L10        addr
+L31.1   mov     [L9_v]      [L22_v]
+        mov     [L22RET]    addr
+L32     mov     [nxt]       [cur]
+        mov     $L28        addr
+L33     mov     0           [L22_v]
+        mov     [L22RET]    addr
 
-L3      mov     [s_end] maddr
-        mov     [c]     memory
-        mov     [s_end] add0
-        mov     add     [s_end]
+-- extern "TIG"
+-- fn L34 (v -> [L34_v0],[L34_v1],[L34_v2],[L34_v3], ret -> [L34RET]) -> _
+L35     mov     [L34_v0]    [L18_v0]
+        mov     [L34_v1]    [L18_v1]
+        mov     [L34_v2]    [L18_v2]
+        mov     [L34_v3]    [L18_v3]
+        mov     [L34RET]    [L18RET] -- tail call
+        mov     $L19        addr
 
-        mov     $L1     addr
+-- testing allocator
 
-L4      mov     10      cio
-        mov     [s_end] sub0 -- terminal position
-
-L5      mov     [s]     sub1
-        mov     sub     atz0
-        mov     $L7     atz1
-        mov     $L6     atz2
-        mov     atz     addr
-
-L6      mov     [s]     maddr
-        mov     memory  cio
-        mov     0       memory -- when exitting, we will run through this memory
+L40     mov     7           [size]
+        mov     $L41        [L22RET]
+        mov     $L23        addr
+L41     mov     [L22_v]     maddr
+        mov     memory      [s]
         
-        mov     [s]     add0
-        mov     add     [s]
-        mov     $L5     addr
+        mov     [s]         add0
+        mov     1           add1
+        mov     [s]         maddr
+        mov     98          memory
+        
+        mov     add         maddr
+        mov     99          memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     100         memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     101         memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     102         memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     103         memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     104         memory
 
--- loop till Space
-L7      mov     32      sub1
-        mov     $L9     atz1
-        mov     $L8     atz2
+-- deallocating block with our string
+L42     mov     [s]         [L34_v0]
+        mov     [L22_v]     add0
+        mov     1           add1
+        mov     add         maddr
+        mov     memory      [L34_v1]
+        mov     add         add0
+        mov     add         maddr
+        mov     memory      [L34_v2]
+        mov     add         add0
+        mov     add         maddr
+        mov     memory      [L34_v3]
+        mov     $L43        [L34RET]
+        mov     $L35        addr
 
-L8      mov     cio     sub0
+-- and allocating it back
+L43     mov     7           [size]
+        mov     $L44        [L22RET]
+        mov     $L23        addr
+L44     mov     [L22_v]     maddr
+        mov     memory      [s]
+        
+        mov     [s]         add0
+        mov     1           add1
+        mov     [s]         maddr
+        mov     memory      cio
+        mov     0           memory
+        
+        mov     add         maddr
+        mov     memory      cio
+        mov     0           memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     memory      cio
+        mov     0           memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     memory      cio
+        mov     0           memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     memory      cio
+        mov     0           memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     memory      cio
+        mov     0           memory
+        mov     add         add0
+        
+        mov     add         maddr
+        mov     memory      cio
+        mov     0           memory
+
+-- no need to deallocate on exit :-)
+
+L45     mov     cio     sub0
+        mov     10      sub1 -- exit on Enter
         mov     sub     atz0
+        mov     $L46    atz1
+        mov     $L45    atz2
         mov     atz     addr
 
-L9
+L46     mov     [_sa]   add0
+        mov     16383   add1
+        mov     add     addr
