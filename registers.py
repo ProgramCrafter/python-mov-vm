@@ -44,6 +44,8 @@ def curses_io(trig, reg0):
     elif reg0 == 257:
       curses.reset_shell_mode()
     else:
+      if reg0 > 257:
+        print('Warning: trying to output', reg0)
       screen.addch(reg0)
     return 0,
   else:
@@ -82,4 +84,14 @@ def mem(trig, value, maddr):
   else:
     return int.from_bytes(memory[0][maddr*8:maddr*8+8], 'big'),
 
-regs = [add, sub, mul, div, tlt, curses_io, io, atz, _legacy, mem]
+def log(trig, value):
+  'wlog>log>'
+  print('>', value, chr(value % 256))
+  return 0,
+
+def qlog(trig, value):
+  'wqlog>qlog>'
+  print(chr(value % 256), end='')
+  return 0,
+
+regs = [add, sub, mul, div, tlt, curses_io, io, atz, _legacy, mem, log, qlog]
