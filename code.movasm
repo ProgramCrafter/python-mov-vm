@@ -161,7 +161,8 @@ L39.1   mov     [L36_j]     maddr
         -- deallocating old chunk
         -- inlined L34
 L39.2   mov     [L36_v2]    [L18_v2]
-        mov     [L36_v3]    [L18_v3]
+        -- mov     [L36_v3]    [L18_v3]
+        mov     [L36_v]     [L18_v3]
         mov     [L36RET]    [L18RET] -- tail call
         mov     $L19        addr
 
