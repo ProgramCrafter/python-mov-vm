@@ -2,8 +2,8 @@
 L6      mov     1028        [_sa]
         mov     1024        [_acf]
 L7      mov     1024        maddr
-        mov     1024        mul0
-        mov     1024        mul1
+        mov     1025        mul0
+        mov     1023        mul1
         mov     mul         memory
         
         mov     $L40        addr
@@ -127,115 +127,119 @@ L33     mov     0           [L22_v]
 
 -- extern "TIG"
 -- fn L34 (v -> [L34_v0],[L34_v1],[L34_v2],[L34_v3], ret -> [L34RET]) -> _
-L35     mov     [L34_v0]    [L18_v0]
-        mov     [L34_v1]    [L18_v1]
-        mov     [L34_v2]    [L18_v2]
+L35     mov     [L34_v2]    [L18_v2]
         mov     [L34_v3]    [L18_v3]
         mov     [L34RET]    [L18RET] -- tail call
         mov     $L19        addr
 
+-- extern "TIG"
+-- fn L36 (v -> [L36_v0],[L36_v1],[L36_v2],[L36_v3], size -> [size],
+--   ret -> [L36RET]) -> [L36_v]
+L37     mov     $L38        [L22RET]
+        mov     $L23        addr
+L38     mov     [L22_v]     [L36_v]
+        mov     [L22_v]     maddr
+        mov     memory      [L36_i]
+        mov     [L36_v0]    [L36_j]
+        mov     [L36_v1]    sub0
+        mov     1           sub1
+        mov     1           add1
+L39     mov     sub0        atz0
+        mov     $L39.2      atz1
+        mov     $L39.1      atz2
+        mov     atz         addr
+L39.1   mov     [L36_j]     maddr
+        mov     memory      [L36_tmp]
+        mov     [L36_j]     add0
+        mov     add         [L36_j]
+        mov     [L36_i]     maddr
+        mov     [L36_tmp]   memory
+        mov     [L36_i]     add0
+        mov     add         [L36_i]
+        mov     sub         sub0
+        mov     $L39        addr
+        -- deallocating old chunk
+        -- inlined L34
+L39.2   mov     [L36_v2]    [L18_v2]
+        mov     [L36_v3]    [L18_v3]
+        mov     [L36RET]    [L18RET] -- tail call
+        mov     $L19        addr
+
 -- testing allocator
 
-L40     mov     7           [size]
-        mov     $L41        [L22RET]
+L40     mov     0           [size]
+        mov     $L40.1      [L22RET]
         mov     $L23        addr
-L41     mov     [L22_v]     maddr
-        mov     memory      [s]
-        
-        mov     [s]         add0
+L40.1   mov     [L22_v]     [cs]
+L41     mov     cio         [c]
+        mov     [c]         add0
         mov     1           add1
-        mov     [s]         maddr
-        mov     98          memory
-        
+        mov     add         atz0
+        mov     $L41        atz1
+        mov     $L42        atz2
+        mov     atz         addr
+L42     mov     [c]         sub0
+        mov     32          sub1
+        mov     sub         atz0
+        mov     $L45        atz1
+        mov     $L43        atz2
+        mov     atz         addr
+        -- reallocating string to add new character at the end
+L43     mov     [cs]        maddr
+        mov     memory      [L36_v0]
+        mov     [cs]        add0
+        mov     1           add1
         mov     add         maddr
-        mov     99          memory
+        mov     memory      [L36_v1]
+        -- new size
+        mov     memory      add0
+        mov     add         [size]
+        mov     maddr       add0
+        -- calculated new size
+        mov     add         maddr
+        mov     memory      [L36_v2]
         mov     add         add0
-        
         mov     add         maddr
-        mov     100         memory
-        mov     add         add0
-        
-        mov     add         maddr
-        mov     101         memory
-        mov     add         add0
-        
-        mov     add         maddr
-        mov     102         memory
-        mov     add         add0
-        
-        mov     add         maddr
-        mov     103         memory
-        mov     add         add0
-        
-        mov     add         maddr
-        mov     104         memory
+        mov     memory      [L36_v3]
+        mov     $L44        [L36RET]
+        mov     $L37        addr
+        -- string reallocated
+L44     mov     [L22_v]     [cs]
+        mov     [cs]        maddr
+        mov     memory      add0
+        mov     [size]      add1
+        mov     add         sub0
+        mov     1           sub1
+        mov     sub         maddr
+        mov     [c]         memory
+        mov     $L41        addr
 
--- deallocating block with our string
-L42     mov     [s]         [L34_v0]
-        mov     [L22_v]     add0
+-- printing string
+L45     mov     [cs]        maddr
+        mov     memory      add0
+        mov     [size]      sub0
+        mov     1           sub1
         mov     1           add1
-        mov     add         maddr
-        mov     memory      [L34_v1]
-        mov     add         add0
-        mov     add         maddr
-        mov     memory      [L34_v2]
-        mov     add         add0
-        mov     add         maddr
-        mov     memory      [L34_v3]
-        mov     $L43        [L34RET]
-        mov     $L35        addr
-
--- and allocating it back
-L43     mov     7           [size]
-        mov     $L44        [L22RET]
-        mov     $L23        addr
-L44     mov     [L22_v]     maddr
-        mov     memory      [s]
-        
-        mov     [s]         add0
-        mov     1           add1
-        mov     [s]         maddr
+L46     mov     sub0        atz0
+        mov     $L50        atz1
+        mov     $L46.1      atz2
+        mov     atz         addr
+L46.1   mov     add0        maddr
         mov     memory      cio
-        mov     0           memory
         
-        mov     add         maddr
-        mov     memory      cio
-        mov     0           memory
         mov     add         add0
-        
-        mov     add         maddr
-        mov     memory      cio
-        mov     0           memory
-        mov     add         add0
-        
-        mov     add         maddr
-        mov     memory      cio
-        mov     0           memory
-        mov     add         add0
-        
-        mov     add         maddr
-        mov     memory      cio
-        mov     0           memory
-        mov     add         add0
-        
-        mov     add         maddr
-        mov     memory      cio
-        mov     0           memory
-        mov     add         add0
-        
-        mov     add         maddr
-        mov     memory      cio
-        mov     0           memory
+        mov     sub         sub0
+        mov     $L46        addr
 
 -- no need to deallocate on exit :-)
 
-L45     mov     cio     sub0
+L50     mov     cio     sub0
         mov     10      sub1 -- exit on Enter
         mov     sub     atz0
-        mov     $L46    atz1
-        mov     $L45    atz2
+        mov     $L51    atz1
+        mov     $L50    atz2
         mov     atz     addr
 
-L46     mov     [_sa]   add0
+L51     mov     [_sa]   add0
         mov     16383   add1
         mov     add     addr
